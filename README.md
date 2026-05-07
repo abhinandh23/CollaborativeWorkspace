@@ -1,56 +1,51 @@
 # Collaborative Developer Workspace (CCE)
 
-Real-time code collaboration workspace built with Angular, Express, MongoDB, and Socket.io.
+Real-time collaborative code editor with version control for code snippets.
 
-## Key Features
+## Features
 
-- Versioned snippets (every save appends a new entry to `versions[]`, no overwrite)
-- Snippet history endpoint for full version timeline
-- Live multi-user editing in snippet-specific Socket.io rooms
-- Monaco-based code editor UI
-- Dockerized full-stack setup (frontend + backend + mongo)
+- **Versioned Snippets**: Git-like versioning where each save appends to a `versions[]` array with code and timestamp.
+- **Real-Time Collaboration**: Multi-user editing in Socket.io rooms with live code updates.
+- **Monaco Editor**: Full-featured code editor UI with syntax highlighting.
+- **REST API**: CRUD operations for snippets and history retrieval.
+- **Dockerized**: Easy setup with Docker Compose for frontend, backend, and MongoDB.
 
-## Stack
+## Tech Stack
 
-- Frontend: Angular 17, Tailwind CSS, Monaco Editor (`ngx-monaco-editor-v2`)
-- Backend: Node.js, Express.js, Socket.io
-- Database: MongoDB + Mongoose
-- Orchestration: Docker Compose
+- **Frontend**: Angular 17, Tailwind CSS, Monaco Editor
+- **Backend**: Node.js, Express.js, Socket.io
+- **Database**: MongoDB with Mongoose
+- **Infrastructure**: Docker, Docker Compose
 
-## Quick Start (Recommended)
+## Prerequisites
 
-### Prerequisites
+- Docker and Docker Compose (recommended)
+- Node.js 20+ and npm (for local dev)
+- MongoDB (for local dev)
 
-- Docker + Docker Compose
+## Installation
 
-### Run
+### Docker (Recommended)
+
+Clone or navigate to the project folder:
 
 ```bash
 cd /home/abhinandh/Desktop/cce
 docker compose up --build
 ```
 
-### Open
+This builds and starts all services.
 
-- Frontend: `http://localhost:4200`
-- Backend health: `http://localhost:5000/health`
+### Local Development
 
-### Stop
-
-```bash
-docker compose down
-```
-
-## Local Run (Without Docker)
-
-### 1) Backend
+#### Backend
 
 ```bash
 cd /home/abhinandh/Desktop/cce/backend
 npm install
 ```
 
-Create `backend/.env`:
+Create `.env` file:
 
 ```env
 PORT=5000
@@ -58,46 +53,60 @@ MONGO_URI=mongodb://localhost:27017/collab_workspace
 FRONTEND_URL=http://localhost:4200
 ```
 
-Start backend:
-
-```bash
-npm run dev
-# or
-npm start
-```
-
-### 2) Frontend
+#### Frontend
 
 ```bash
 cd /home/abhinandh/Desktop/cce/frontend
 npm install
+```
+
+## Running the Project
+
+### Docker
+
+```bash
+cd /home/abhinandh/Desktop/cce
+docker compose up --build
+```
+
+- Frontend: http://localhost:4200
+- Backend: http://localhost:5000
+
+### Local
+
+#### Backend
+
+```bash
+cd /home/abhinandh/Desktop/cce/backend
+npm run dev
+```
+
+#### Frontend
+
+```bash
+cd /home/abhinandh/Desktop/cce/frontend
 npm start
 ```
 
+Ensure MongoDB is running locally.
+
 ## API Endpoints
 
-Base: `http://localhost:5000/api/snippets`
+Base URL: `http://localhost:5000/api/snippets`
 
-- `POST /` -> create snippet (first version)
-- `GET /` -> list snippets (latest version preview)
-- `GET /:id` -> full snippet
-- `PUT /:id` -> save new version
-- `GET /:id/history` -> version history
+- `POST /` - Create snippet
+- `GET /` - List snippets
+- `GET /:id` - Get snippet
+- `PUT /:id` - Save new version
+- `GET /:id/history` - Get history
 
-## Real-Time Events
+## Socket.io Events
 
-Client emits:
+- Client emits: `join-snippet`, `leave-snippet`, `code-change`
+- Client listens: `remote-code-change`, `snippet-version-created`
 
-- `join-snippet`
-- `leave-snippet`
-- `code-change`
+## Troubleshooting
 
-Client listens:
-
-- `remote-code-change`
-- `snippet-version-created`
-
-## Notes
-
-- For Angular 17 compatibility, use `ngx-monaco-editor-v2@17.0.1`.
-- If you want a clean DB reset: `docker compose down -v`.
+- For Monaco compatibility, use `ngx-monaco-editor-v2@17.0.1` in Angular 17.
+- Reset DB: `docker compose down -v`
+- Ports: Ensure 4200, 5000, 27017 are free.
