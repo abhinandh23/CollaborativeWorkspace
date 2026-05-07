@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  height: 100vh;
+  color: #dbe4ff;
+}
+
+.editor-shell {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: radial-gradient(circle at top right, #172554 0%, #0b1220 55%);
+}
+
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-group label {
+  font-size: 12px;
+  color: #93c5fd;
+}
+
+.field-group input,
+.field-group select {
+  min-width: 180px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.save-btn {
+  margin-left: auto;
+  height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(120deg, #0891b2, #2563eb);
+  color: #fff;
+  font-weight: 600;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.workspace-grid {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+}
+
+.editor-panel {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.monaco-host {
+  min-height: 0;
+  height: 100%;
+  display: block;
+}
+
+.status {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #67e8f9;
+  border-top: 1px solid #1e293b;
+  background: #0f172a;
+}
+
+.history-panel {
+  border-left: 1px solid #1e293b;
+  background: #020617;
+  padding: 12px;
+  overflow: auto;
+}
+
+.history-panel h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #bfdbfe;
+}
+
+.history-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-panel li {
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #0b1220;
+}
+
+.history-panel span {
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.history-panel time {
+  font-size: 12px;
+  color: #a5b4fc;
+}
+
+@media (max-width: 980px) {
+  :host {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .save-btn {
+    margin-left: 0;
+  }
+
+  .workspace-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(60vh, 1fr) auto;
+  }
+
+  .history-panel {
+    border-left: 0;
+    border-top: 1px solid #1e293b;
+    max-height: 240px;
+  }
+}
