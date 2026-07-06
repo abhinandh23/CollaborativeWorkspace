@@ -1,112 +1,77 @@
-# Collaborative Developer Workspace (CCE)
+# Collaborative Developer Workspace
 
-Real-time collaborative code editor with version control for code snippets.
+A production-ready, full-stack collaborative developer workspace built with React, Django, and WebSockets. This application allows multiple users to edit code in real-time, execute Python code directly from the browser, and communicate via a synchronized workspace chat.
 
-## Features
+## 🚀 Features
 
-- **Versioned Snippets**: Git-like versioning where each save appends to a `versions[]` array with code and timestamp.
-- **Real-Time Collaboration**: Multi-user editing in Socket.io rooms with live code updates.
-- **Monaco Editor**: Full-featured code editor UI with syntax highlighting.
-- **REST API**: CRUD operations for snippets and history retrieval.
-- **Dockerized**: Easy setup with Docker Compose for frontend, backend, and MongoDB.
+- **Real-Time Code Sync:** Powered by Django Channels, Redis, and WebSockets, users experience instant code syncing.
+- **Live Workspace Chat:** A fully synchronized chat system allowing developers to communicate while coding.
+- **Native Python Execution:** Users can execute their Python scripts safely in the browser using a custom native execution engine.
+- **Modern UI/UX:** Built with React, Vite, Shadcn UI, and TailwindCSS for a premium, dark-mode-first aesthetic (Zinc theme).
+- **Robust Authentication:** Secure JWT (JSON Web Token) authentication system.
+- **Containerized Infrastructure:** Easily deployable using Docker, PostgreSQL, and Redis.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Frontend**: Angular 17, Tailwind CSS, Monaco Editor
-- **Backend**: Node.js, Express.js, Socket.io
-- **Database**: MongoDB with Mongoose
-- **Infrastructure**: Docker, Docker Compose
+### Frontend
+- **Framework:** React + Vite
+- **Styling:** TailwindCSS + Shadcn UI
+- **Editor:** Monaco Editor (`@monaco-editor/react`)
+- **Routing:** React Router v6
+- **HTTP Client:** Axios (with automatic JWT Interceptors)
 
-## Prerequisites
+### Backend
+- **Framework:** Django 5.0 + Django REST Framework
+- **WebSockets:** Django Channels + Daphne + Redis
+- **Database:** PostgreSQL (`psycopg[binary]`)
+- **Authentication:** Simple JWT
 
-- Docker and Docker Compose (recommended)
-- Node.js 20+ and npm (for local dev)
-- MongoDB (for local dev)
+### Infrastructure
+- **Containerization:** Docker & Docker Compose
+- **Services:** Postgres (Database) & Redis (Message Broker)
 
-## Installation
+## 💻 Local Setup Instructions
 
-### Docker (Recommended)
+### Prerequisites
+Make sure you have the following installed on your machine:
+- Node.js & npm
+- Python 3.10+
+- Docker Desktop (for Postgres and Redis)
 
-Clone or navigate to the project folder:
-
+### 1. Start Infrastructure Services
+Start the PostgreSQL and Redis containers using Docker Compose:
 ```bash
-cd /home/abhinandh/Desktop/cce
-docker compose up --build
+docker-compose up -d
 ```
 
-This builds and starts all services.
-
-### Local Development
-
-#### Backend
-
+### 2. Backend Setup (Django)
+Open a terminal in the project root and navigate to the backend:
 ```bash
-cd /home/abhinandh/Desktop/cce/backend
+cd backend
+python -m venv venv
+venv\Scripts\activate  # On Windows
+pip install -r requirements.txt
+
+# Run migrations
+python manage.py migrate
+
+# Start the Django server (port 8001 to avoid conflicts)
+python manage.py runserver 8001
+```
+
+### 3. Frontend Setup (React)
+Open a second terminal in the project root and navigate to the frontend:
+```bash
+cd frontend
 npm install
-```
 
-Create `.env` file:
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/collab_workspace
-FRONTEND_URL=http://localhost:4200
-```
-
-#### Frontend
-
-```bash
-cd /home/abhinandh/Desktop/cce/frontend
-npm install
-```
-
-## Running the Project
-
-### Docker
-
-```bash
-cd /home/abhinandh/Desktop/cce
-docker compose up --build
-```
-
-- Frontend: http://localhost:4200
-- Backend: http://localhost:5000
-
-### Local
-
-#### Backend
-
-```bash
-cd /home/abhinandh/Desktop/cce/backend
+# Start the Vite development server
 npm run dev
 ```
 
-#### Frontend
+### 4. Access the App
+Open your browser and navigate to `http://localhost:5173`. Register an account, create a workspace, and share the URL with a friend to start collaborating!
 
-```bash
-cd /home/abhinandh/Desktop/cce/frontend
-npm start
-```
+---
 
-Ensure MongoDB is running locally.
-
-## API Endpoints
-
-Base URL: `http://localhost:5000/api/snippets`
-
-- `POST /` - Create snippet
-- `GET /` - List snippets
-- `GET /:id` - Get snippet
-- `PUT /:id` - Save new version
-- `GET /:id/history` - Get history
-
-## Socket.io Events
-
-- Client emits: `join-snippet`, `leave-snippet`, `code-change`
-- Client listens: `remote-code-change`, `snippet-version-created`
-
-## Troubleshooting
-
-- For Monaco compatibility, use `ngx-monaco-editor-v2@17.0.1` in Angular 17.
-- Reset DB: `docker compose down -v`
-- Ports: Ensure 4200, 5000, 27017 are free.
+*Built from scratch as a mastery project for advanced software engineering architecture.*
