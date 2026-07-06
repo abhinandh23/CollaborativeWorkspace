@@ -2,7 +2,7 @@
 
 A production-ready, full-stack collaborative developer workspace built with React, Django, and WebSockets. This application allows multiple users to edit code in real-time, execute Python code directly from the browser, and communicate via a synchronized workspace chat.
 
-## 🚀 Features
+## Features
 
 - **Real-Time Code Sync:** Powered by Django Channels, Redis, and WebSockets, users experience instant code syncing.
 - **Live Workspace Chat:** A fully synchronized chat system allowing developers to communicate while coding.
@@ -11,7 +11,7 @@ A production-ready, full-stack collaborative developer workspace built with Reac
 - **Robust Authentication:** Secure JWT (JSON Web Token) authentication system.
 - **Containerized Infrastructure:** Easily deployable using Docker, PostgreSQL, and Redis.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework:** React + Vite
@@ -30,7 +30,7 @@ A production-ready, full-stack collaborative developer workspace built with Reac
 - **Containerization:** Docker & Docker Compose
 - **Services:** Postgres (Database) & Redis (Message Broker)
 
-## 💻 Local Setup Instructions
+## Local Setup Instructions
 
 ### Prerequisites
 Make sure you have the following installed on your machine:
@@ -74,4 +74,4 @@ Open your browser and navigate to `http://localhost:5173`. Register an account, 
 
 ---
 
-*Built from scratch as a mastery project for advanced software engineering architecture.*
+
