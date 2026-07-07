@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,15 @@ export default function Login() {
       login(response.data.access, response.data.refresh, { email });
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      const response = await api.post('/users/google/', { credential: credentialResponse.credential });
+      login(response.data.access, response.data.refresh, response.data.user);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Google login failed.');
     }
   };
 
@@ -40,6 +50,22 @@ export default function Login() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
+          
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google login failed.')}
+              theme="filled_black"
+            />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
