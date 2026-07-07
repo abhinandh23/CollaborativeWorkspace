@@ -19,7 +19,22 @@ export default function Workspace() {
   const [newMessage, setNewMessage] = useState('');
   const [output, setOutput] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
+  const [workspaceName, setWorkspaceName] = useState<string>('');
+  const [copiedId, setCopiedId] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    // Fetch workspace details
+    const fetchWorkspace = async () => {
+      try {
+        const res = await api.get(`/workspaces/${id}/`);
+        setWorkspaceName(res.data.name);
+      } catch (err) {
+        console.error("Failed to fetch workspace details", err);
+      }
+    };
+    fetchWorkspace();
+  }, [id]);
 
   useEffect(() => {
     let reconnectTimeout: ReturnType<typeof setTimeout>;
@@ -103,16 +118,46 @@ export default function Workspace() {
     }
   };
 
+  const copyWorkspaceId = () => {
+    if (id) {
+      navigator.clipboard.writeText(id);
+      setCopiedId(true);
+      setTimeout(() => setCopiedId(false), 2000);
+    }
+  };
+
   return (
-    <div className="flex h-[calc(100vh-6rem)] w-full max-w-[1600px] mx-auto border border-border rounded-xl overflow-hidden mt-8 shadow-2xl">
-      {/* Sidebar for chat */}
-      <div className="w-80 border-r border-border bg-card flex flex-col">
-        <div className="p-4 border-b border-border bg-muted/30">
-          <h2 className="text-sm font-semibold tracking-tight">Workspace Chat</h2>
-          <div className="text-[10px] text-muted-foreground mt-1 truncate">
-            ID: {id}
-          </div>
+    <div className="w-full max-w-[1600px] mx-auto px-6 flex flex-col items-center">
+      {/* Workspace Header */}
+      <div className="w-full flex justify-between items-end mt-6 mb-2 px-2">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {workspaceName ? workspaceName : 'Loading Workspace...'}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Collaborating in real-time
+          </p>
         </div>
+        <button 
+          onClick={copyWorkspaceId}
+          className="group relative text-xs text-muted-foreground font-mono bg-muted/50 hover:bg-muted py-1.5 px-3 rounded cursor-pointer transition-colors flex items-center gap-2"
+          title="Click to copy Workspace ID"
+        >
+          <span>ID: {id}</span>
+          {copiedId ? (
+            <span className="text-green-500 font-semibold absolute right-3 bg-muted px-1">Copied!</span>
+          ) : (
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-3 bg-muted px-1 text-foreground">Copy</span>
+          )}
+        </button>
+      </div>
+
+      <div className="flex h-[calc(100vh-12rem)] w-full border border-border rounded-xl overflow-hidden shadow-2xl">
+        {/* Sidebar for chat */}
+        <div className="w-80 border-r border-border bg-card flex flex-col">
+          <div className="p-4 border-b border-border bg-muted/30">
+            <h2 className="text-sm font-semibold tracking-tight">Workspace Chat</h2>
+          </div>
         
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 && (
@@ -177,6 +222,7 @@ export default function Workspace() {
             {output}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

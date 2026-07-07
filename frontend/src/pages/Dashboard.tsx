@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
   const [workspaces, setWorkspaces] = useState<any[]>([]);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
+  const [joinWorkspaceId, setJoinWorkspaceId] = useState('');
+  const [joinError, setJoinError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,19 +38,53 @@ export default function Dashboard() {
     }
   };
 
+  const joinWorkspace = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setJoinError('');
+    if (!joinWorkspaceId.trim()) return;
+    
+    try {
+      const response = await api.post('/workspaces/join/', { workspace_id: joinWorkspaceId.trim() });
+      navigate(`/workspace/${response.data.id}`);
+    } catch (error: any) {
+      setJoinError(error.response?.data?.error || "Failed to join workspace.");
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl p-8">
       <h1 className="text-3xl font-bold mb-8">Your Workspaces</h1>
       
-      <form onSubmit={createWorkspace} className="flex gap-4 mb-8">
-        <Input 
-          placeholder="New Workspace Name..." 
-          value={newWorkspaceName}
-          onChange={(e) => setNewWorkspaceName(e.target.value)}
-          className="max-w-sm"
-        />
-        <Button type="submit">Create Workspace</Button>
-      </form>
+      <div className="flex flex-col md:flex-row gap-8 mb-8">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold mb-4">Create New</h2>
+          <form onSubmit={createWorkspace} className="flex gap-4">
+            <Input 
+              placeholder="Workspace Name..." 
+              value={newWorkspaceName}
+              onChange={(e) => setNewWorkspaceName(e.target.value)}
+              className="max-w-sm"
+            />
+            <Button type="submit">Create</Button>
+          </form>
+        </div>
+
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold mb-4">Join Existing</h2>
+          <form onSubmit={joinWorkspace} className="flex flex-col gap-2">
+            <div className="flex gap-4">
+              <Input 
+                placeholder="Paste Workspace ID..." 
+                value={joinWorkspaceId}
+                onChange={(e) => setJoinWorkspaceId(e.target.value)}
+                className="max-w-sm"
+              />
+              <Button type="submit" variant="secondary">Join</Button>
+            </div>
+            {joinError && <p className="text-red-500 text-sm">{joinError}</p>}
+          </form>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {workspaces.map((workspace) => (
