@@ -4,9 +4,10 @@ services:
     runtime: python
     rootDir: backend
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    # Migrations run at start because the build step can't reach the database's private hostname.
     # Daphne is an ASGI server, needed for WebSockets (gunicorn/WSGI would not work)
-    startCommand: daphne -b 0.0.0.0 -p $PORT core.asgi:application
+    startCommand: python manage.py migrate --noinput && daphne -b 0.0.0.0 -p $PORT core.asgi:application
     envVars:
       - key: PYTHON_VERSION
         value: "3.13"
