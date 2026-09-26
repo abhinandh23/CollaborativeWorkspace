@@ -48,15 +48,32 @@ class WorkspaceConsumer(AsyncWebsocketConsumer):
 
             elif message_type == 'code_update':
                 code = data.get('code')
+                file_id = data.get('file_id')
                 
                 # Broadcast code to all users in the workspace
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         'type': 'broadcast_code_update',
-                        'code': code
+                        'code': code,
+                        'file_id': file_id
                     }
                 )
+
+            elif message_type == 'file_event':
+                # action can be 'create', 'delete', 'rename'
+                action = data.get('action')
+                file_id = data.get('file_id')
+                
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'broadcast_file_event',
+                        'action': action,
+                        'file_id': file_id
+                    }
+                )
+
         except Exception as e:
             print("Error in WebSocket receive:", str(e))
 
@@ -75,10 +92,21 @@ class WorkspaceConsumer(AsyncWebsocketConsumer):
         try:
             await self.send(text_data=json.dumps({
                 'type': 'code_update',
-                'code': event.get('code')
+                'code': event.get('code'),
+                'file_id': event.get('file_id')
             }))
         except Exception as e:
             print("Error in broadcast_code_update:", str(e))
+
+    async def broadcast_file_event(self, event):
+        try:
+            await self.send(text_data=json.dumps({
+                'type': 'file_event',
+                'action': event.get('action'),
+                'file_id': event.get('file_id')
+            }))
+        except Exception as e:
+            print("Error in broadcast_file_event:", str(e))
 
     @database_sync_to_async
     def save_message(self, content, sender_id):

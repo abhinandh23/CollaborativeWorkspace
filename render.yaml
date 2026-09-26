@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: collab-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    # Daphne is an ASGI server, needed for WebSockets (gunicorn/WSGI would not work)
+    startCommand: daphne -b 0.0.0.0 -p $PORT core.asgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13"
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: collab-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: collab-redis
+          property: connectionString
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+
+  - type: keyvalue
+    name: collab-redis
+    plan: free
+    ipAllowList: [] # only reachable from your Render services
+
+databases:
+  - name: collab-db
+    plan: free
+    databaseName: collabdb

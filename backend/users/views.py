@@ -37,11 +37,15 @@ class GoogleLoginView(APIView):
             last_name = idinfo.get('family_name', '')
 
             # Check if user exists, otherwise create
-            user, created = User.objects.get_or_create(email=email)
-            if created:
-                user.username = email.split('@')[0]
-                user.first_name = first_name
-                user.last_name = last_name
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                user = User(
+                    email=email,
+                    username=email.split('@')[0],
+                    first_name=first_name,
+                    last_name=last_name
+                )
                 user.set_unusable_password()
                 user.save()
             
@@ -55,6 +59,8 @@ class GoogleLoginView(APIView):
 
         except ValueError as e:
             # Invalid token
-            return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": f"Invalid token: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            import traceback
+            traceback.print_exc()
+            return Response({"error": f"Internal Error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

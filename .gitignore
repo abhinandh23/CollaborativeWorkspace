@@ -6,3 +6,5 @@ __pycache__/
 backend/venv/
 backend/test_ws.py
 backend/temp_exec.py
+
+backend/staticfiles/

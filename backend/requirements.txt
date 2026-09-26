@@ -5,7 +5,11 @@ django-cors-headers==4.3.1
 python-dotenv==1.0.1
 daphne
 requests
-channels==4.0.0
+google-auth
 channels==4.0.0
 channels-redis==4.2.0
+# redis-py 8 adds a default 5s socket timeout that breaks channels-redis blocking reads
+redis>=5,<8
 djangorestframework-simplejwt==5.3.1
+dj-database-url
+whitenoise
