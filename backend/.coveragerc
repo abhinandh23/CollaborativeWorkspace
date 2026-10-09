@@ -1,0 +1,6 @@
+[run]
+source = users, workspace, core
+omit =
+    */migrations/*
+    */tests.py
+    core/wsgi.py

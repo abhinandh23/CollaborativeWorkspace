@@ -1,0 +1,17 @@
+{
+  "name": "Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8001/api",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "password",
+      "value": "Newman-pass-123",
+      "type": "secret",
+      "enabled": true
+    }
+  ]
+}

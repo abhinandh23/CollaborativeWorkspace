@@ -8,3 +8,9 @@ backend/test_ws.py
 backend/temp_exec.py
 
 backend/staticfiles/
+
+# Test output
+backend/reports/
+backend/.coverage
+backend/coverage.xml
+reports/
